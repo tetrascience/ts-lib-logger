@@ -1,6 +1,6 @@
-# ts-logger
+# ts-lib-logger
 
-ts-logger module integrates Graylog, file logger and console log together. 
+ts-lib-logger module integrates Graylog, file logger and console log together. 
 Based on the chosen transport, the logger will be sending logs to different destinations. 
 You can read more about the [transports](#transports) and [features](#features) in the following sections. 
 
@@ -102,7 +102,12 @@ This transport is NOT actively maintained, thus please do *NOT* use.
 #### Feature: `throttle`
 When your log happens very fast, it's helpful to throttle the logger. 
 [Lodash's default throttling behavior](https://lodash.com/docs/4.17.4#throttle) is used here.  
-A waiting time of 1 second by default is used.
+A waiting time of 1 second by default is used. 
+Be aware that since throttling is applied, some logs will not be printed out. 
+
+> **Limitation**: in the current implementation, if you call `logger.throttle.<method>` multiple times
+in the same process, but with different arguments, all the logs will be throttled together, leading 
+to the possibility that some of the inputs will not be printed out.
 
 ```javascript
 const logger = require('ts-logger')('console');
@@ -199,4 +204,13 @@ More documentation can be found at
 * what if the log input is an array
 * add logger.extendTypes as a function
 * migrate to ES6, node6 style
+* Eliminate the limitation of the throttling, maybe use the following
+```javascript
+let tLogger = logger.getThrottledFunction('warn');
+tLogger.warn('a');
+tLogger.warn('b');
 
+let tLogger1 = new logger.throttled('warn');
+tLogger1.warn('a')
+
+```
