@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tetrascience/ts-logger.git"
+    "url": "https://github.com/tetrascience/ts-lib-logger.git"
   },
   "author": "TetraScience developers@tetrascience.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tetrascience/ts-logger/issues"
+    "url": "https://github.com/tetrascience/ts-lib-logger/issues"
   },
-  "homepage": "https://github.com/tetrascience/ts-logger",
+  "homepage": "https://github.com/tetrascience/ts-lib-logger",
   "dependencies": {
     "colors": "^1.1.2",
     "file-stream-rotator": "0.0.7",
