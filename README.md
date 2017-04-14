@@ -1,6 +1,6 @@
 # ts-lib-logger
 
-ts-lib-logger module integrates Graylog, file logger and console log together. 
+ts-lib-logger module integrates Graylog and console log. 
 Based on the chosen transport, the logger will be sending logs to different destinations. 
 You can read more about the [transports](#transports) and [features](#features) in the following sections. 
 
