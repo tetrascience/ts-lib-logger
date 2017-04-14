@@ -6,16 +6,16 @@ You can read more about the [transports](#transports) and [features](#features) 
 
 ## Installation
 ```
-npm install tetrascience/ts-logger#docker --save
+npm install tetrascience/ts-lib-logger#docker --save
 
 // if for production
-npm install tetrascience/ts-logger#docker --production
+npm install tetrascience/ts-lib-logger#docker --production
 ```
 
 ## Usage
 
 ### Overview
-Pass in  the transport and a config object to the loggerFactory (require('ts-logger')), such as
+Pass in  the transport and a config object to the loggerFactory (require('ts-lib-logger')), such as
 
 ```
 const TRANSPORT = 'graylog';
@@ -23,7 +23,7 @@ const config = {
     service: 'ts-microservice-1',
     NODE_ENV: 'customer-A'
 };
-const logger = require('ts-logger')(TRANSPORT, config);
+const logger = require('ts-lib-logger')(TRANSPORT, config);
 
 // error 
 let err = new Error('something is wrong');
@@ -63,7 +63,7 @@ Beyond the transports, ts-logger also supports the following logging features
 ### Transports
 #### Transport: `graylog`
 ```javascript
-const logger = require('ts-logger')('graylog', {
+const logger = require('ts-lib-logger')('graylog', {
    graylogHost: 'http://localhost',
    graylogPort: '12201'
 });
@@ -82,7 +82,7 @@ original input will be the `message` field.
   
 #### Transport: `console`
 ```javascript
-const logger = require('ts-logger')('console')
+const logger = require('ts-lib-logger')('console')
 logger.info({
     key1: 'value1'
 })
@@ -110,14 +110,14 @@ in the same process, but with different arguments, all the logs will be throttle
 to the possibility that some of the inputs will not be printed out.
 
 ```javascript
-const logger = require('ts-logger')('console');
+const logger = require('ts-lib-logger')('console');
 logger.throttle.error(new Error('something wrong'));
 logger.throttle.debug('a debug log');
 ```
 You can adjust the throttle wait time by passing `throttle_wait` into the config object for the logger factory. For example:
 ```javascript
 // print the log at most every 2 seconds
-const logger = require('ts-logger')('console',{throttle_wait: 2000);
+const logger = require('ts-lib-logger')('console',{throttle_wait: 2000);
 logger.throttle.error(new Error('something wrong'));
 logger.throttle.debug('a debug log');
 ```
@@ -126,9 +126,9 @@ logger.throttle.debug('a debug log');
 In debug mode, console transport will also be used *in addition to* the chosen transport, if it was not console transport. 
 The debug mode can be set using `config.debug_mode`
 ```javascript
-const logger = require('ts-logger')('graylog', {
+const logger = require('ts-lib-logger')('graylog', {
    graylogHost: 'http://localhost',
-   graylogPort: '12201'
+   graylogPort: '12201',
    debug_mode: true              // enable the debug mode using the config
 });
 logger.info('something to log'); // this will go to console as well
@@ -166,18 +166,18 @@ const commonTypes = {
 You can take advantage of the common types like the following example and add extra types using `logger.extendTypes`. Be aware that
 do NOT use hyphen in the key of the extra type object. 
 ```javascript
-const tsLogger = require('ts-logger');
+const tsLogger = require('ts-lib-logger');
 const logger = tsLogger('graylog', config);
 const extraTypes = {
-    SERVICE_SPECIFIC_BAHAVIOR_1: service-specific-behavior-1,
-    SERVICE_SPECIFIC_BAHAVIOR_2: service-specific-behavior-2
+    SERVICE_SPECIFIC_BAHAVIOR_1: 'service-specific-behavior-1',
+    SERVICE_SPECIFIC_BAHAVIOR_2: 'service-specific-behavior-2'
 };
 // add your own log types
 logger.extendTypes(extraTypes); 
 
 // use one of the common log types
 logger.info({
-    type: logger.types.WORKER_CRASH
+    type: logger.types.WORKER_CRASH,
     process_id: '897214'
 });
 
@@ -206,7 +206,7 @@ More documentation can be found at
 * migrate to ES6, node6 style
 * Eliminate the limitation of the throttling, maybe use the following
 ```javascript
-let tLogger = logger.getThrottledFunction('warn');
+let tLogger = require('ts-lib-logger').getThrottledFunction('warn');
 tLogger.warn('a');
 tLogger.warn('b');
 
