@@ -203,7 +203,8 @@ More documentation can be found at
 * let user config the throttling using config. 
 * what if the log input is an array
 * add logger.extendTypes as a function
-* migrate to ES6, node6 style
+* use the debug node module for debug log
+* be more expilicit that this is a factory pattern
 * Eliminate the limitation of the throttling, maybe use the following
 ```javascript
 let tLogger = require('ts-lib-logger').getThrottledFunction('warn');
