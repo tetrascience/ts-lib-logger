@@ -13,6 +13,8 @@ const commonTypes = {
     SERVICE_CRASH: 'service-crash',
     SERVICE_START: 'service-start',
     QUEUE_ANALYSIS_FAILED: 'queue-analysis-failed',
+    UNCAUGHT_EXCEPTION: 'uncaught-exception',
+    UNHANDLED_REJECTION: 'unhandled-rejection',
     UNKNOWN: 'unknown',
 };
 
