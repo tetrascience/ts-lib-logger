@@ -170,6 +170,8 @@ const commonTypes = {
     SERVICE_CRASH: 'service-crash',
     SERVICE_START: 'service-start',
     QUEUE_ANALYSIS_FAILED: 'queue-analysis-failed',
+    UNCAUGHT_EXCEPTION: 'uncaught-exception',
+    UNHANDLED_REJECTION: 'unhandled-rejection',
     UNKNOWN: 'unknown'
 };
 ```
@@ -211,6 +213,8 @@ More documentation can be found at
 ## Todo: 
 * what if the log input is an array
 * migrate to ES6, node6 style and add eslint
+* use the debug node module for debug log
+* be more expilicit that this is a factory pattern
 * Eliminate the limitation of the throttling, maybe use the following
 ```javascript
 let tLogger = require('ts-lib-logger').getThrottledFunction('warn');
