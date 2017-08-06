@@ -1,5 +1,7 @@
 # ts-lib-logger
 
+[![Build Status](https://travis-ci.org/tetrascience/ts-lib-logger.svg?branch=master)](https://travis-ci.org/tetrascience/ts-lib-logger)
+
 ts-lib-logger module integrates Graylog and console log. 
 Based on the chosen transport, the logger will be sending logs to different destinations. 
 You can read more about the [transports](#transports) and [features](#features) in the following sections. 
@@ -15,15 +17,17 @@ npm install tetrascience/ts-lib-logger#docker --production
 ## Usage
 
 ### Overview
-Pass in  the transport and a config object to the loggerFactory (require('ts-lib-logger')), such as
+Pass in  the transport and a config object to the loggerFactory (require('ts-lib-logger')). Example:
 
-```
-const TRANSPORT = 'graylog';
+```js
+const loggerFactory = require('ts-lib-logger');
+const transport = 'graylog';
 const config = {
-    service: 'ts-microservice-1',
-    NODE_ENV: 'customer-A'
+    service_name: 'ts-microservice-1',
+    env: 'local',
+    tenant: 'customer A',
 };
-const logger = require('ts-lib-logger')(TRANSPORT, config);
+const logger = loggerFactory(transport, config);
 
 // error 
 let err = new Error('something is wrong');
@@ -53,7 +57,7 @@ Here are the transports we support
 * [graylog](#transport-graylog)
 * [console](#transport-console)
 
-Beyond the transports, ts-logger also supports the following logging features
+Beyond the transports, ts-lib-logger also supports the following logging features
 * [throttle](#feature-throttle)
 * [debug mode]((#feature-debug-mode))
 * [decoration](#feature-decoration)
@@ -93,9 +97,12 @@ Read about util.inspect [here](https://nodejs.org/api/util.html#util_util_inspec
 * If you pass a non-object (something like number or string), it will be converted into an object and the 
 original input will be the `message` field. 
 
-#### Transport: `file`
-This transport is NOT actively maintained, thus please do *NOT* use.
-
+### Config
+* `throttle_wait` _(optional)_ Refer to  [throttling](#feature-throttle)
+* `debug_mode` _(optional)_ Refer to  [debug_mode](#feature-debug-mode)
+* `service_name` _(optional)_ Refer to [decoration](#feature-decoration)
+* `env` _(optional)_ Refer to [decoration](#feature-decoration)
+* `tenant` _(optional)_ Refer to [decoration](#feature-decoration)
 
 ### Features
 
@@ -132,15 +139,19 @@ const logger = require('ts-lib-logger')('graylog', {
    debug_mode: true              // enable the debug mode using the config
 });
 logger.info('something to log'); // this will go to console as well
-
 ```
+An [elv](https://www.npmjs.com/package/elv) operator will be applied to `config.debug_mode` to determine whether it's truthy or falsy.
+
 #### Feature: `decoration`
 Input to the logger will always be converted into an object. 
 If the original input is an string or number, it will become the `message` field of the object. 
 
 The following fields in the config object will also be attached to that object: 
-* `service`, which is used to tag the name of the service, such as *tspower*, *tsfeed* or etc,
-* `NODE_ENV`, which is used to tag the application environment, such as *docker*, *customerA* and etc. 
+* `service_name`, which is used to tag the name of the service, such as *tspower*, *tsfeed* or etc,
+* `env`, which is used to label the log with the application environment, such as *local*, *ci* and etc, 
+* `tenant`, which is used to label the log with the application's tenant, such as *multi*, *customer-a* and etc. 
+
+If these fields are not included in config, `SERVICE_NAME`, `ENV` and `TENANT` in the environmental variables will be used. 
 
 #### Feature: `type`
 It's highly recommended that you compile a list of well defined log types, such as *device-heartbeat*, *service-restart* and etc. 
@@ -164,10 +175,9 @@ const commonTypes = {
 ```
 
 You can take advantage of the common types like the following example and add extra types using `logger.extendTypes`. Be aware that
-do NOT use hyphen in the key of the extra type object. 
+do NOT use hyphen (`-`) in the key of the extra type object and use underscore (`_`) instead. 
 ```javascript
-const tsLogger = require('ts-lib-logger');
-const logger = tsLogger('graylog', config);
+const logger = require('ts-lib-logger')('graylog', config);
 const extraTypes = {
     SERVICE_SPECIFIC_BAHAVIOR_1: 'service-specific-behavior-1',
     SERVICE_SPECIFIC_BAHAVIOR_2: 'service-specific-behavior-2'
@@ -199,11 +209,8 @@ More documentation can be found at
 * https://tetrascience.atlassian.net/wiki/display/TSD/Log+Levels
 
 ## Todo: 
-* sanitize the user input for the config obj
-* let user config the throttling using config. 
 * what if the log input is an array
-* add logger.extendTypes as a function
-* migrate to ES6, node6 style
+* migrate to ES6, node6 style and add eslint
 * Eliminate the limitation of the throttling, maybe use the following
 ```javascript
 let tLogger = require('ts-lib-logger').getThrottledFunction('warn');

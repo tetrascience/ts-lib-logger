@@ -1,6 +1,6 @@
 {
   "name": "ts-lib-logger",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "ts-lib-logger supports Graylog and console as transport. It also supports throttling, metadata decoration and log types",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "colors": "^1.1.2",
     "file-stream-rotator": "0.0.7",
     "graygelf": "^1.0.0",
+    "joi": "^10.6.0",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "moment": "^2.14.1"

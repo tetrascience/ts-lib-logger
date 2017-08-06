@@ -6,6 +6,8 @@ const decorate = require('./util/decorate.js');
 const graylogLogger = require('./lib/graylog-logger');
 const fileLogger = require('./lib/file-logger');
 const consoleLogger = require('./lib/console-logger');
+const Joi = require('joi');
+
 const commonTypes = {
     WORKER_CRASH: 'worker-crash',
     WORKER_START: 'worker-start',
@@ -15,6 +17,15 @@ const commonTypes = {
     QUEUE_ANALYSIS_FAILED: 'queue-analysis-failed',
     UNKNOWN: 'unknown',
 };
+const configSchema = Joi.object().keys({
+  throttle_wait: Joi.number().min(10),
+  debug_mode: Joi.boolean(),
+  service_name: Joi.string(),
+  env: Joi.string(),
+  tenant: Joi.string()
+});
+
+const transportSchema = Joi.string().allow(['graylog', 'console']);
 
 /**
  * A factory function that creates a logger based on the config and transport
@@ -23,15 +34,16 @@ const commonTypes = {
  * @return {Object} logger
  */
 let loggerFactory = function (transport, config) {
+
+    Joi.assert(transport, transportSchema, `${transport} is not a valid transport.`);
+    Joi.assert(config, configSchema, `${config} is not a valid config.`);
+
     let baseLogger;
 
-    assert(!config || _.isObject(config), 'the second argument, if available, must be a config object');
     config = config || {};
     config.transport = transport;
     config.throttle_wait = config.throttle_wait || 1000;
     config.debug_mode = config.debug_mode || false;
-    assert(_.isNumber(config.throttle_wait) && config.throttle_wait > 10,'config.throttle_wait should be a number, greater then 10ms');
-    assert(_.isBoolean(config.debug_mode), 'config.debug_mode should be a boolean');
 
     let consoleL = consoleLogger(config);
 
@@ -75,7 +87,7 @@ let loggerFactory = function (transport, config) {
     // when there are hundreds of data points, the logs, if not throttled, can be overwhelming to digest/debug
     let throttledLogger = {};
     for (let method in baseLogger){
-        throttledLogger[method] = _.throttle(logger[method], config.throttle_wait || 1000, { trailing: false });
+        throttledLogger[method] = _.throttle(logger[method], config.throttle_wait, { trailing: false });
     }
     logger.throttle = throttledLogger;
 
