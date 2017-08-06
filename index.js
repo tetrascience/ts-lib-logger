@@ -24,7 +24,9 @@ const configSchema = Joi.object().keys({
   debug_mode: Joi.boolean(),
   service_name: Joi.string(),
   env: Joi.string(),
-  tenant: Joi.string()
+  tenant: Joi.string(),
+  graylogHost: Joi.string(),
+  graylogPort: Joi.number(),
 });
 
 const transportSchema = Joi.string().allow(['graylog', 'console']);
