@@ -8,10 +8,10 @@ You can read more about the [transports](#transports) and [features](#features) 
 
 ## Installation
 ```
-npm install tetrascience/ts-lib-logger#docker --save
+npm install tetrascience/ts-lib-logger --save
 
 // if for production
-npm install tetrascience/ts-lib-logger#docker --production
+npm install tetrascience/ts-lib-logger --production
 ```
 
 ## Usage
