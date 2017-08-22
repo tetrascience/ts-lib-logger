@@ -4,9 +4,9 @@ const _ = require('lodash');
 const assert = require('assert');
 const decorate = require('./util/decorate.js');
 const graylogLogger = require('./lib/graylog-logger');
-const fileLogger = require('./lib/file-logger');
 const consoleLogger = require('./lib/console-logger');
 const Joi = require('joi');
+const dnsSync = require('dns-sync');
 
 const {string, number, boolean} = Joi;
 
@@ -62,12 +62,11 @@ let loggerFactory = function (transport, config) {
   // pick the base logger according to the transport
   // if there is no match, use console
   switch (transport) {
-    case 'file':
-      baseLogger = fileLogger(config);
-      break;
     case 'graylog':
-      baseLogger = graylogLogger(config);
-      break;
+      if (dnsSync.resolve(config.graylogHost)){
+        baseLogger = graylogLogger(config);
+        break;
+      }
     default:
       baseLogger = consoleL;
   }

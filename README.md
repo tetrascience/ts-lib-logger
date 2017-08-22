@@ -8,6 +8,9 @@ You can read more about the [transports](#transports) and [features](#features) 
 
 ## Installation
 ```
+// recommended
+yarn add git://github.com/tetrascience/ts-lib-logger.git#^1.0.0 --production
+
 npm install tetrascience/ts-lib-logger --save
 
 // if for production
@@ -57,6 +60,8 @@ Here are the transports we support
 * [graylog](#transport-graylog)
 * [console](#transport-console)
 
+> If `graylogHost` fails to resolve to an ip, transport will default to console.
+
 Beyond the transports, ts-lib-logger also supports the following logging features
 * [throttle](#feature-throttle)
 * [debug mode]((#feature-debug-mode))
@@ -83,6 +88,8 @@ logger.error(new Error('something bad'));
 * If you pass in an error object, `error.message` will become the `message` and `error.stack` will become the `body`.
 * If you pass a non-object (something like number or string), it will be converted into an object and the 
 original input will be the `message` field. 
+
+> If `graylogHost` fails to resolve to an ip, transport will default to console.
   
 #### Transport: `console`
 ```javascript
@@ -91,7 +98,7 @@ logger.info({
     key1: 'value1'
 })
 ```
-* If an object is passed in, require('util').inspect will be invoked (with default settings) 
+* If an object is passed in, `require('util').inspect` will be invoked (with default settings) 
 to get a string representation of the object.
 Read about util.inspect [here](https://nodejs.org/api/util.html#util_util_inspect_object_options).
 * If you pass a non-object (something like number or string), it will be converted into an object and the 
@@ -103,6 +110,10 @@ original input will be the `message` field.
 * `service_name` _(optional)_ Refer to [decoration](#feature-decoration)
 * `env` _(optional)_ Refer to [decoration](#feature-decoration)
 * `tenant` _(optional)_ Refer to [decoration](#feature-decoration)
+* `graylogPort` _(optional)_ Default to 12201
+* `graylogHost` _(optional)_ Required if transport is graylog. 
+`dnsSync.resolve`[source code](https://github.com/skoranga/node-dns-sync) is used to check if this host name resolves, 
+if the resolution fails, will fall back to console transport
 
 ### Features
 
