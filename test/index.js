@@ -217,4 +217,27 @@ describe('index', function () {
     }, 1500);
   });
 
+  it('should fall back to console transport when graylogHost fails to resolve', function (done) {
+    let consoleCount = 0;
+
+    const consoleMock = function () {
+      return {
+        info: () => {
+          consoleCount++;
+        }
+      }
+    };
+
+    mockery.registerMock('./lib/console-logger', consoleMock);
+
+    let logger = require('../')('graylog', {
+      graylogHost: 'something that does not exist',
+    });
+
+    logger.info();
+
+    expect(consoleCount).to.be.equal(1);
+    done();
+  });
+
 });
