@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test/",
     "clean": "rm -rf es5 || true",
-    "build": "npm run clean && babel --optimal runtime -d es5 lib",
+    "build": "npm run clean && ./node_modules/babel-cli/bin/babel.js --optimal runtime -d es5 lib",
     "postinstall": "npm run build"
   },
   "repository": {
