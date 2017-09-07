@@ -73,7 +73,7 @@ describe('index', function () {
     mockery.registerMock('./util/decorate.js', decorateMock);
     mockery.registerMock('./lib/graylog-logger', graylogMock);
 
-    let logger = require('../index.js')('graylog', {
+    let logger = require('../lib/index.js')('graylog', {
       graylogHost: 'localhost',
     });
 
@@ -99,7 +99,7 @@ describe('index', function () {
 
     mockery.registerMock('./lib/graylog-logger', graylogMock);
 
-    let logger = require('../index.js')('graylog', {
+    let logger = require('../lib/index.js')('graylog', {
       graylogHost: 'localhost',
     });
     logger.info('test');
@@ -142,10 +142,10 @@ describe('index', function () {
     mockery.registerMock('./lib/console-logger', consoleMock);
 
 
-    const logger = require('../index.js')('graylog', {
+    const logger = require('../lib/index.js')('graylog', {
       graylogHost: 'localhost'
     });
-    const logger2 = require('../index.js')('graylog', {
+    const logger2 = require('../lib/index.js')('graylog', {
       debug_mode: true,
       graylogHost: 'localhost',
     });

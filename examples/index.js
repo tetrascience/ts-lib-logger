@@ -1,4 +1,4 @@
-const tsLogger = require('../index')('graylog', {
+const tsLogger = require('../lib/index')('graylog', {
   graylogHost: 'localhostq',
   graylogPort: 12201,
 });

@@ -4,7 +4,7 @@ const chai = require('chai');
 const expect = chai.expect;
 
 
-var decorate = require('../util/decorate.js');
+var decorate = require('../lib/util/decorate.js');
 
 
 
