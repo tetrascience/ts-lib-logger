@@ -1,17 +1,19 @@
 "use strict";
 
-const _ = require('lodash');
-const assert = require('assert');
-const decorate = require('./util/decorate.js');
-const graylogLogger = require('./lib/graylog-logger');
-const consoleLogger = require('./lib/console-logger');
-const Joi = require('joi');
-const dnsSync = require('dns-sync');
+var _ = require('lodash');
+var assert = require('assert');
+var decorate = require('./util/decorate.js');
+var graylogLogger = require('./lib/graylog-logger');
+var consoleLogger = require('./lib/console-logger');
+var Joi = require('joi');
+var dnsSync = require('dns-sync');
 
-const {string, number, boolean} = Joi;
+var string = Joi.string;
+var number = Joi.number;
+var boolean = Joi.boolean;
 
-const transportOptions = ['graylog', 'console'];
-const commonTypes = {
+var transportOptions = ['graylog', 'console'];
+var commonTypes = {
   WORKER_CRASH: 'worker-crash',
   WORKER_START: 'worker-start',
   QUEUE_STALLED: 'queue-stalled',
@@ -22,7 +24,7 @@ const commonTypes = {
   UNHANDLED_REJECTION: 'unhandled-rejection',
   UNKNOWN: 'unknown',
 };
-const configSchema = Joi.object().keys({
+var configSchema = Joi.object().keys({
   transport: string().allow(transportOptions),
   throttle_wait: number().min(10).default(1000),
   debug_mode: boolean().default(true),
@@ -38,7 +40,7 @@ const configSchema = Joi.object().keys({
   stripUnknown: true,
 });
 
-const transportSchema = Joi.string().allow(transportOptions);
+var transportSchema = Joi.string().allow(transportOptions);
 
 /**
  * A factory function that creates a logger based on the config and transport
@@ -46,18 +48,18 @@ const transportSchema = Joi.string().allow(transportOptions);
  * @param {Object} config a config object fo the logger
  * @return {Object} logger
  */
-let loggerFactory = function (transport, config) {
+var loggerFactory = function (transport, config) {
 
   Joi.attempt(transport, transportSchema, `${transport} is not a valid transport.`);
   config = config || {};
   config.transport = transport;
   Joi.attempt(config, configSchema, `${config} is not a valid config.`);
 
-  let baseLogger;
+  var baseLogger;
 
   config.throttle_wait = config.throttle_wait || 1000;
 
-  let consoleL = consoleLogger(config);
+  var consoleL = consoleLogger(config);
 
   // pick the base logger according to the transport
   // if there is no match, use console
@@ -73,14 +75,14 @@ let loggerFactory = function (transport, config) {
 
 
   // create the new logger
-  let logger = _.cloneDeep(baseLogger);
+  var logger = _.cloneDeep(baseLogger);
 
   // 1. decorate the base logger if base logger is NOT console
   // 2. always print to console if the base logger is NOT console AND it's debug mode
   if (transport !== 'console') {
-    for (let method in baseLogger) {
-      let originalFn = baseLogger[method];
-      let decoratedFn = decorate(originalFn, config);
+    for (var method in baseLogger) {
+      var originalFn = baseLogger[method];
+      var decoratedFn = decorate(originalFn, config);
 
       // add console log to base logger in debug mode
       if (config.debug_mode) {
@@ -96,8 +98,8 @@ let loggerFactory = function (transport, config) {
 
   // add a throttle method to logger such that logs do not get too crazy
   // when there are hundreds of data points, the logs, if not throttled, can be overwhelming to digest/debug
-  let throttledLogger = {};
-  for (let method in baseLogger) {
+  var throttledLogger = {};
+  for (var method in baseLogger) {
     throttledLogger[method] = _.throttle(logger[method], config.throttle_wait, {trailing: false});
   }
   logger.throttle = throttledLogger;
@@ -106,11 +108,13 @@ let loggerFactory = function (transport, config) {
   logger.types = _.clone(commonTypes);
   logger.commonTypes = commonTypes;
 
-  logger.extendTypes = (extraTypes) => {
+  logger.extendTypes = function (extraTypes){
     logger.types = _.assign(logger.types, extraTypes);
   };
 
-  logger.listTypes = () => logger.types;
+  logger.listTypes = function() {
+    return logger.types;
+  };
 
   // attach the config object
   logger.config = config;

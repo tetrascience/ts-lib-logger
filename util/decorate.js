@@ -1,6 +1,6 @@
 "use strict";
 
-const _ = require('lodash');
+var _ = require('lodash');
 
 
 /**
@@ -17,7 +17,7 @@ module.exports = function decorate(fn, config) {
   config = config || {};
 
   return function (arg) {
-    const UNKNOWN = 'unknown';
+    var UNKNOWN = 'unknown';
 
     // if not an object, turn arg into an object
     if (!_.isObject(arg)) {
