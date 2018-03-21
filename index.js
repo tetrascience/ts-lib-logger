@@ -84,7 +84,7 @@ let loggerFactory = function (transport, config) {
 
   // 1. decorate the base logger if base logger is NOT console
   // 2. always print to console if the base logger is NOT console AND it's debug mode
-  if (transport !== 'console') {
+  if (transport !== 'console' && transport != 'script' ) {
     for (let method in baseLogger) {
       let originalFn = baseLogger[method];
       let decoratedFn = decorate(originalFn, config);

@@ -36,7 +36,7 @@ describe('script-logger', function () {
 
         const logMsg = logger.info('some thing to notice');
         const loggedJson = console.error.getCall(0).args[0];
-        //console.log(loggedJson);
+        console.log(loggedJson);
 
         // parse the JSON and inspect.
         const result = JSON.parse(loggedJson);
@@ -44,6 +44,9 @@ describe('script-logger', function () {
         expect(result).to.have.a.property("message");
         expect(result).to.have.a.property("level");
         expect(result).to.have.a.property("timestamp");
+        expect(result).to.not.have.a.property("env");
+        expect(result).to.not.have.a.property("service-name");
+        expect(result).to.not.have.a.property("type");
         expect(result.message).to.equal("some thing to notice");
 
         done();
