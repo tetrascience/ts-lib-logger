@@ -5,6 +5,7 @@ const assert = require('assert');
 const decorate = require('./util/decorate.js');
 const graylogLogger = require('./lib/graylog-logger');
 const consoleLogger = require('./lib/console-logger');
+const scriptLogger = require('./lib/script-logger');
 const Joi = require('joi');
 const dnsSync = require('dns-sync');
 
@@ -58,6 +59,7 @@ let loggerFactory = function (transport, config) {
   config.throttle_wait = config.throttle_wait || 1000;
 
   let consoleL = consoleLogger(config);
+  let scriptL = scriptLogger(config);
 
   // pick the base logger according to the transport
   // if there is no match, use console
@@ -65,8 +67,13 @@ let loggerFactory = function (transport, config) {
     case 'graylog':
       if (dnsSync.resolve(config.graylogHost)){
         baseLogger = graylogLogger(config);
-        break;
+      } else {
+        baseLogger = consoleL;
       }
+      break;
+    case 'script':
+      baseLogger = scriptL;
+        break;
     default:
       baseLogger = consoleL;
   }
