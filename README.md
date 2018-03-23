@@ -11,10 +11,10 @@ You can read more about the [transports](#transports) and [features](#features) 
 // recommended
 yarn add git://github.com/tetrascience/ts-lib-logger.git#^1.0.0 --production
 
-npm install tetrascience/ts-lib-logger --save
+yarn install tetrascience/ts-lib-logger --save
 
 // if for production
-npm install tetrascience/ts-lib-logger --production
+yarn install tetrascience/ts-lib-logger --production
 ```
 
 ## Usage
@@ -59,6 +59,7 @@ transformed and adapted properly for the transport.
 Here are the transports we support
 * [graylog](#transport-graylog)
 * [console](#transport-console)
+* [script](#transport-script)
 
 > If `graylogHost` fails to resolve to an ip, transport will default to console.
 
@@ -103,6 +104,24 @@ to get a string representation of the object.
 Read about util.inspect [here](https://nodejs.org/api/util.html#util_util_inspect_object_options).
 * If you pass a non-object (something like number or string), it will be converted into an object and the 
 original input will be the `message` field. 
+
+#### Transport: `script`
+
+`script` is a pseudo-transport for creating annotated console messages for task scripts. The script author logs messages
+at appropriate levels, and, by convention _all_ messaghes are passed on  to the task runner via standard error. Message filtering will
+occur in the task runner, and will be a JSON string that includes:
+* The message text, with the key `message`
+* The log level (as an integer), with the key `level`
+* A Timestamp, with the key `timestamp`
+
+
+```javascript
+// Script Code
+const logger = require('ts-lib-logger')('script');
+logger.info("Processing file");
+```
+
+The consumer (for example ts-service-task-runner:models/task.js) will parse stderr logs as JSON and extract relevant information.
 
 ### Config
 * `throttle_wait` _(optional)_ Refer to  [throttling](#feature-throttle)
