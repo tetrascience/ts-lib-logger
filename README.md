@@ -121,7 +121,7 @@ const logger = require('ts-lib-logger')('script');
 logger.info("Processing file");
 ```
 
-The consumer (for example ts-service-task-runner:models/task.js) will parse the 
+The consumer (for example ts-service-task-runner:models/task.js) will parse stderr logs as JSON and extract relevant information.
 
 ### Config
 * `throttle_wait` _(optional)_ Refer to  [throttling](#feature-throttle)
