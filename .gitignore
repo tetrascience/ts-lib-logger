@@ -1,2 +1,10 @@
+# IntelliJ and Webstorm files
 .idea
+*.iml
+
+# node modules
 node_modules
+
+
+# Logs
+yarn-error.log
