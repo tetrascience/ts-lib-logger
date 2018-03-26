@@ -31,6 +31,8 @@
     "mocha": "^3.2.0",
     "mocha-sinon": "^2.0.0",
     "mockery": "^2.0.0",
-    "sinon": "^4.4.6"
+    "sinon": "^4.4.6",
+    "eslint-config-tetrascience": "tetrascience/eslint-config-tetrascience"
+
   }
 }
