@@ -9,8 +9,6 @@ const scriptLogger = require('./lib/script-logger');
 const Joi = require('joi');
 const dnsSync = require('dns-sync');
 
-const {string, number, boolean} = Joi;
-
 const transportOptions = ['graylog', 'console'];
 const commonTypes = {
   WORKER_CRASH: 'worker-crash',
@@ -24,17 +22,17 @@ const commonTypes = {
   UNKNOWN: 'unknown',
 };
 const configSchema = Joi.object().keys({
-  transport: string().allow(transportOptions),
-  throttle_wait: number().min(10).default(1000),
-  debug_mode: boolean().default(true),
-  service_name: string(),
-  env: string(),
-  tenant: string(),
-  graylogHost: string().when('transport', {
+  transport: Joi.string().allow(transportOptions),
+  throttle_wait: Joi.number().min(10).default(1000),
+  debug_mode: Joi.boolean().default(true),
+  service_name: Joi.string(),
+  env: Joi.string(),
+  tenant: Joi.string(),
+  graylogHost: Joi.string().when('transport', {
     is: 'graylog',
-    then: string().required(),
+    then: Joi.string().required(),
   }),
-  graylogPort: number().default(12201),
+  graylogPort: Joi.number().default(12201),
 }).options({
   stripUnknown: true,
 });

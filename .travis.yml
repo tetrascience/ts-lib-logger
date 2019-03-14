@@ -1,5 +1,5 @@
 language: node_js
 node_js:
-  - "6.11.0"
+  - 10
 before_script:
-  - npm install -g mocha
+  - yarn install --ignore-optional
